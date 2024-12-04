@@ -1,0 +1,111 @@
+import java.util.ArrayList; import java.util.List; import java.util.Scanner;
+
+class User {
+String username; String password;
+String role; // Either "seeker" or "employer" String resume;
+String personalInfo;
+
+
+User(String username, String password, String role, String resume, String personalInfo) { this.username = username;
+this.password = password; this.role = role; this.resume = resume;
+this.personalInfo = personalInfo;
+}
+}
+
+
+class Job { String title;
+String description; String employer;
+
+Job(String title, String description, String employer) {
+ 
+this.title = title; this.description = description; this.employer = employer;
+}
+}
+
+
+public class Main {
+static List<User> users = new ArrayList<>(); static List<Job> jobs = new ArrayList<>();
+
+public static void main(String[] args) { Scanner scanner = new Scanner(System.in);
+
+while (true) {
+System.out.println("\nWelcome to the Job Portal!"); System.out.println("1. Register"); System.out.println("2. View Jobs"); System.out.println("3. Post a Job (Employer only)"); System.out.println("4. Exit"); System.out.print("Choose an option: ");
+
+int choice = Integer.parseInt(scanner.nextLine());
+
+
+switch (choice) { case 1:
+registerUser(scanner); break;
+
+case 2:
+ 
+viewJobs(); break;
+case 3:
+postJob(scanner); break;
+
+case 4:
+System.out.println("Exiting the application. Goodbye!"); scanner.close();
+return;
+
+
+default:
+System.out.println("Invalid choice. Please try again.");
+}
+}
+}
+
+
+private static void registerUser(Scanner scanner) { System.out.println("Register as (seeker/employer): "); String role = scanner.nextLine().toLowerCase();
+
+while (!(role.equals("seeker") || role.equals("employer"))) { System.out.println("Invalid role. Please enter 'seeker' or 'employer': "); role = scanner.nextLine().toLowerCase();
+}
+
+
+System.out.println("Enter username: ");
+ 
+String username = scanner.nextLine(); System.out.println("Enter password: ");
+
+String password = scanner.nextLine();
+
+
+String resume = ""; String personalInfo = "";
+
+if (role.equals("seeker")) { System.out.println("Enter your resume: "); resume = scanner.nextLine();
+
+System.out.println("Enter your personal information: "); personalInfo = scanner.nextLine();
+}
+
+
+users.add(new User(username, password, role, resume, personalInfo)); System.out.println("User registered successfully!");
+}
+
+
+private static void viewJobs() { System.out.println("Available Jobs:"); if (jobs.isEmpty()) {
+System.out.println("No jobs available.");
+} else {
+for (Job job : jobs) {
+System.out.println("Title: " + job.title + ". Description: " + job.description + ".
+Employer: " + job.employer);
+} }
+ 
+
+private static void postJob(Scanner scanner) {
+
+
+System.out.println("Enter your username: "); String username = scanner.nextLine();
+
+User user = findUserByUsername(username);
+
+
+if (user != null && user.role.equals("employer")) { System.out.println("Enter the job title: ");
+String title = scanner.nextLine(); System.out.println("Enter the job description: "); String description = scanner.nextLine(); jobs.add(new Job(title, description, user.username)); System.out.println("Job posted successfully!");
+} else {
+System.out.println("You must be an employer to post a job.");
+}
+}
+private static User findUserByUsername(String username) { for (User user : users) {
+if (user.username.equals(username)) { return user;
+}
+}
+return null;
+}
